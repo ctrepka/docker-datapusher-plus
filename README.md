@@ -4,7 +4,7 @@ This repository makes use of [datHere's datapusher-plus](https://github.com/dath
 
 `DataPusher+ is a fork of Datapusher that combines the speed and robustness of ckanext-xloader with the data type guessing of Datapusher.`
 
-## Getting started
+## Getting started with docker compose
 
 To run a barebones install of datapusher-plus using docker compose, cd into the docker directory and run `docker-compose build` then `docker-compose up`. If you are utilizing v2 of docker compose, use `docker compose build` then `docker-compose up`.
 
