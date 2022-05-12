@@ -1,0 +1,48 @@
+version: "3"
+
+volumes:
+  pg_data:
+
+services:
+  datapusher:
+    depends_on:
+      db:
+        condition: service_healthy
+    container_name: datapusher_plus
+    build:
+      dockerfile: ./Dockerfile
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "8800:8800"
+    env_file:
+      - ./.env
+    environment:
+      - DATAPUSHER_SQLALCHEMY_DATABASE_URI=postgresql://${DATAPUSHER_JOBS_DB_USER}:${DATAPUSHER_JOBS_DB_PASSWORD}@db/${DATAPUSHER_JOBS_DB_NAME}
+  db:
+    container_name: db_datapusher_plus
+    build:
+      context: .
+      dockerfile: postgresql/Dockerfile
+      args:
+        - DS_RO_PASS=${DATASTORE_READONLY_PASSWORD}
+        - POSTGRES_PASSWORD=the_password
+    env_file:
+      - ./.env
+    networks:
+      - backend
+    environment:
+      - PGDATA=/var/lib/postgresql/data/db
+      - DATAPUSHER_SQLALCHEMY_DATABASE_URI=postgresql://${DATAPUSHER_JOBS_DB_USER}:${DATAPUSHER_JOBS_DB_PASSWORD}@db/${DATAPUSHER_JOBS_DB_NAME}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "datapusher_jobs"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+networks:
+  frontend:
+  backend:
