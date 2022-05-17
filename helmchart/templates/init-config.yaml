@@ -1,1 +1,8 @@
 # add script to check db up or not via init-job.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-datapusher-init-configmap
+data:
+  datapusher-init.py: |
+{{ .Files.Get "datapusher-init/datapusher-init.py" | indent 4 }}

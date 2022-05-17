@@ -1,1 +1,31 @@
 # pings database and retries until service up
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-datapusher-init
+spec:
+  template:
+    spec:
+      volumes:
+        - name: {{ .Release.Name }}-datapusher-init-configmap
+          configMap:
+            name: {{ .Release.Name }}-datapusher-init-configmap
+        - name: {{ .Release.Name }}-datapusher-configset-configmap
+          configMap:
+            name: {{ .Release.Name }}-datapusher-configset-configmap
+      containers:
+      - name: {{ .Release.Name }}-datapusher-init
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        - name: TEST
+          value: "TEST ENVIRONMENT VARIABLE"
+        command: ["/usr/lib/ckan/datapusher-plus/bin/python"]
+        args: ["/srv/datapusher-init/datapusher-init.py"]
+        volumeMounts:
+        - name: {{ .Release.Name }}-datapusher-init-configmap
+          mountPath: /srv/datapusher-init
+        - name: {{ .Release.Name }}-datapusher-configset-configmap
+          mountPath: /srv/datapusher-configset
+      restartPolicy: Never
+  backoffLimit: 3
