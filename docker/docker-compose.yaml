@@ -8,9 +8,10 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    container_name: datapusher_plus
+    container_name: datapusher-plus
     build:
       dockerfile: ./Dockerfile
+    image: tnristwdb/datapusher-plus:latest
     networks:
       - frontend
       - backend
@@ -21,7 +22,7 @@ services:
     environment:
       - DATAPUSHER_SQLALCHEMY_DATABASE_URI=postgresql://${DATAPUSHER_JOBS_DB_USER}:${DATAPUSHER_JOBS_DB_PASSWORD}@db/${DATAPUSHER_JOBS_DB_NAME}
   db:
-    container_name: db_datapusher_plus
+    container_name: db-datapusher-plus
     build:
       context: .
       dockerfile: postgresql/Dockerfile

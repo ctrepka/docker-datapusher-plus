@@ -1,8 +1,11 @@
 #############################
 ### Build DataPusher Plus ###
 #############################
-
 FROM ubuntu:focal-20210827
+
+LABEL maintainer="Texas Natural Resources Information Systems <tnris.twdb@gmail.com>"
+LABEL org.opencontainers.image.source https://github.com/ctrepka/docker-datapusher-plus
+
 
 # Set CKAN version to build
 ENV GIT_URL=https://github.com/ckan/ckan.git

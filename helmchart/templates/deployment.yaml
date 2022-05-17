@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "datapusher.fullname" . }}
+  labels:
+    {{- include "datapusher.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "datapusher.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "datapusher.selectorLabels" . | nindent 8 }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "datapusher.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8800
+              protocol: TCP
+          env:
+            # new values
+            - name: DATAPUSHER_QSV_BIN
+              value: {{ .Values.datapusher.qsv.bin }}
+            - name: DATAPUSHER_QSV_DEDUP
+              value: {{ .Values.datapusher.qsv.deduplicate | quote }}
+            - name: DATAPUSHER_JOBS_DB_USER
+              value: {{ .Values.datapusher.jobs.user }}
+            - name: DATAPUSHER_JOBS_DB_PASSWORD
+              value: {{ .Values.datapusher.jobs.password }}
+            - name: DATAPUSHER_JOBS_DB_NAME
+              value: {{ .Values.datapusher.jobs.dbName }}
+            - name: DATAPUSHER_DATASTORE_DB_USER
+              value: {{ .Values.datapusher.datastore.user }}
+            - name: DATAPUSHER_DATASTORE_DB_PASSWORD
+              value: {{ .Values.datapusher.datastore.password }}
+            - name: DATAPUSHER_DATASTORE_DB_NAME
+              value: {{ .Values.datapusher.datastore.dbName }}
+            - name: DATAPUSHER_LOG_FILE
+              value: {{ .Values.datapusher.logFile }}
+            - name: DATAPUSHER_STDERR
+              value: {{ .Values.datapusher.stdErr | quote }}
+            - name: DATAPUSHER_PREVIEW_ROWS
+              value: {{ .Values.datapusher.previewRows | quote }}
+            - name: DATAPUSHER_DEFAULT_EXCEL_SHEET
+              value: {{ .Values.datapusher.defaultExcelSheet | quote }}
+            - name: DATAPUSHER_AUTO_ALIAS
+              value: {{ .Values.datapusher.autoAlias | quote }}
+            - name: DATAPUSHER_WRITE_ENGINE_URL
+              value: {{ .Values.datapusher.writeEngineUrl }}  
+            # old values
+            - name: DATAPUSHER_MAX_CONTENT_LENGTH
+              value: {{ .Values.datapusher.maxContentLength | quote }}
+            - name: DATAPUSHER_CHUNK_SIZE
+              value: {{ .Values.datapusher.chunkSize | quote }}
+            - name: DATAPUSHER_CHUNK_INSERT_ROWS
+              value: {{ .Values.datapusher.insertRows | quote }}
+            - name: DATAPUSHER_DOWNLOAD_TIMEOUT
+              value: {{ .Values.datapusher.downloadTimeout | quote }}
+            - name: DATAPUSHER_SSL_VERIFY
+              value: {{ .Values.datapusher.datapusherSslVerify | quote }}
+            - name: DATAPUSHER_REWRITE_RESOURCES
+              value: {{ .Values.datapusher.datapusherRewriteResources | quote }}
+            - name: DATAPUSHER_REWRITE_URL
+              value: {{ .Values.datapusher.datapusherRewriteUrl | quote }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
