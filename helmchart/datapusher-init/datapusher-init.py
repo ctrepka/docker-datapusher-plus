@@ -8,10 +8,14 @@ os.system(
     "{}/bin/pip install psycopg2-binary".format(VENV)
 )
 
-master_user = os.environ.get("PSQL_MASTER", "postgres")
-host = os.environ.get()
-master_passwd = os.environ.get()
-master_database = os.environ.get()
+master_user = os.environ.get("POSTGRES_USER", "postgres")
+host = os.environ.get("DATAPUSHER_SQLALCHEMY_DATABASE_URI", "")
+master_passwd = os.environ.get("POSTGRES_PASSWORD")
+# Designed/intended for use with mdillon:11 postgis image.
+# See https://hub.docker.com/r/mdillon/postgis/
+# for notes on default environment variable settings,
+# which are taken into account below
+master_database = os.environ.get("POSTGRES_DB", master_user)
 
 import psycopg2
 

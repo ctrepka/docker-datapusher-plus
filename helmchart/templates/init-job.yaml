@@ -7,10 +7,10 @@ spec:
   template:
     spec:
       volumes:
-        - name: {{ .Release.Name }}-datapusher-init-configmap
+        - name: {{ .Release.Name }}-datapusher-init-volume
           configMap:
             name: {{ .Release.Name }}-datapusher-init-configmap
-        - name: {{ .Release.Name }}-datapusher-configset-configmap
+        - name: {{ .Release.Name }}-datapusher-configset-volume
           configMap:
             name: {{ .Release.Name }}-datapusher-configset-configmap
       containers:
@@ -23,9 +23,9 @@ spec:
         command: ["/usr/lib/ckan/datapusher-plus/bin/python"]
         args: ["/srv/datapusher-init/datapusher-init.py"]
         volumeMounts:
-        - name: {{ .Release.Name }}-datapusher-init-configmap
+        - name: {{ .Release.Name }}-datapusher-init-volume
           mountPath: /srv/datapusher-init
-        - name: {{ .Release.Name }}-datapusher-configset-configmap
+        - name: {{ .Release.Name }}-datapusher-configset-volume
           mountPath: /srv/datapusher-configset
       restartPolicy: Never
   backoffLimit: 3

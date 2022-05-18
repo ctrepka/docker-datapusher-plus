@@ -34,16 +34,18 @@ datapusher:
   qsv:
     deduplicate: "1"
     bin: "/usr/local/bin/qsvdp"
-  # jobs db info
-  jobs:
-    user: "jobsUserHere"
-    password: "jobsPasswordHere"
-    dbName: "jobsDbNameHere"
-  # datastore db info
-  datastore:
-    user: "datastoreUserHere"
-    password: "datastorePasswordHere"
-    dbName: "datastoreDbNameHere"
+  # master db info used to connect to and create databases
+  masterDBUser: "postgres"
+  masterDBPassword: "postgres"
+  masterDBName: "postgres"
+  # jobs db info used to create jobs db
+  jobsDBUser: "jobsUserHere"
+  jobsDBPassword: "jobsPasswordHere"
+  jobsDBName: "jobsDbNameHere"
+  # datastore db info used to create datastore db
+  datastoreDBUser: "datastoreUserHere"
+  datastoreDBPassword: "datastorePasswordHere"
+  datastpreDBName: "datastoreDbNameHere"
   # location for datastore logfile
   logFile: "/tmp/ckan_service.log"
   # stdErr enabled or not (0 for False or 1 for True)
@@ -58,7 +60,7 @@ datapusher:
   writeEngineUrl: ""
 serviceAccount:
   # Specifies whether a service account should be created
-  create: true
+  create: false
   # Annotations to add to the service account
   annotations: {}
   # The name of the service account to use.

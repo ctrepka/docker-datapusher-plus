@@ -12,5 +12,13 @@ export class CdkStack extends Stack {
         repositoryName: "datapusher-plus",
       }
     );
+
+    const datapusher_plus_helm_repo = new aws_ecr.Repository(
+      this,
+      "datapusher-plus-helmchart",
+      {
+        repositoryName: "datapusher-plus-helmchart",
+      }
+    );
   }
 }

@@ -33,6 +33,12 @@ spec:
               protocol: TCP
           env:
             # new values
+            - name: POSTGRES_USER
+              value: {{ .Values.datapusher.masterDBUser }}
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.datapusher.masterDBPassword }}
+            - name: POSTGRES_DB
+              value: {{ .Values.datapusher.masterDBName }}
             - name: DATAPUSHER_QSV_BIN
               value: {{ .Values.datapusher.qsv.bin }}
             - name: DATAPUSHER_QSV_DEDUP
