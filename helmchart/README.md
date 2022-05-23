@@ -1,12 +1,15 @@
-datapusher
+datapusher-plus
 ==========
-CKAN Datapusher helm chart
+CKAN Datapusher Plus helm chart
 
 Current chart version is `1.0.0`
 
 
-
-
+## TODOS
+- [ ] add new datapusher plus values to chart values table in README.md
+- [ ] add option to retreive secrets using aws secrets driver
+- [ ] init db in datapusher-init/datapusher-init.py instead of using docker entrypoint
+- [ ] wait for db connection using datapusher-init/datapusher-init.py
 
 ## Chart Values
 

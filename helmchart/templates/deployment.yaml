@@ -32,33 +32,44 @@ spec:
               containerPort: 8800
               protocol: TCP
           env:
-            # new values
+            # master postgres vars
+            - name: DB_HOST
+              value: {{ .Values.DBHost }}
             - name: POSTGRES_USER
               value: {{ .Values.datapusher.masterDBUser }}
             - name: POSTGRES_PASSWORD
               value: {{ .Values.datapusher.masterDBPassword }}
             - name: POSTGRES_DB
               value: {{ .Values.datapusher.masterDBName }}
+            - name: DATAPUSHER_SQLALCHEMY_DATABASE_URI
+              value: "postgresql://{{ .Values.datapusher.datapusherJobsDBUser }}:{{ .Values.datapusher.datapusherJobsDBPassword }}@{{ .Values.DBHost }}/{{ .Values.datapusher.datapusherJobsDBName }}"
+            # location of QSV BINARY
             - name: DATAPUSHER_QSV_BIN
               value: {{ .Values.datapusher.qsv.bin }}
+            # should datapusher remove duplicate records in a resource?
             - name: DATAPUSHER_QSV_DEDUP
               value: {{ .Values.datapusher.qsv.deduplicate | quote }}
+            # vars to use to create / connect to Jobs DB
             - name: DATAPUSHER_JOBS_DB_USER
-              value: {{ .Values.datapusher.jobs.user }}
+              value: {{ .Values.datapusher.datapusherJobsDBUser }}
             - name: DATAPUSHER_JOBS_DB_PASSWORD
-              value: {{ .Values.datapusher.jobs.password }}
+              value: {{ .Values.datapusher.datapusherJobsDBPassword }}
             - name: DATAPUSHER_JOBS_DB_NAME
-              value: {{ .Values.datapusher.jobs.dbName }}
+              value: {{ .Values.datapusher.datapusherJobsDBName }}
+            # vars to use to create / connect to Datastore RW DB
             - name: DATAPUSHER_DATASTORE_DB_USER
-              value: {{ .Values.datapusher.datastore.user }}
+              value: {{ .Values.datapusher.datastoreRWDBUser }}
             - name: DATAPUSHER_DATASTORE_DB_PASSWORD
-              value: {{ .Values.datapusher.datastore.password }}
+              value: {{ .Values.datapusher.datastoreRWDBPassword }}
             - name: DATAPUSHER_DATASTORE_DB_NAME
-              value: {{ .Values.datapusher.datastore.dbName }}
+              value: {{ .Values.datapusher.datastoreDBName }}
+            # location of Datapusher logFile
             - name: DATAPUSHER_LOG_FILE
               value: {{ .Values.datapusher.logFile }}
+            # whether Datapusher should log to stdErr
             - name: DATAPUSHER_STDERR
               value: {{ .Values.datapusher.stdErr | quote }}
+            # number of preview rows to display via datapusher
             - name: DATAPUSHER_PREVIEW_ROWS
               value: {{ .Values.datapusher.previewRows | quote }}
             - name: DATAPUSHER_DEFAULT_EXCEL_SHEET
@@ -66,7 +77,7 @@ spec:
             - name: DATAPUSHER_AUTO_ALIAS
               value: {{ .Values.datapusher.autoAlias | quote }}
             - name: DATAPUSHER_WRITE_ENGINE_URL
-              value: {{ .Values.datapusher.writeEngineUrl }}  
+              value: {{ .Values.datapusher.writeEngineUrl }}
             # old values
             - name: DATAPUSHER_MAX_CONTENT_LENGTH
               value: {{ .Values.datapusher.maxContentLength | quote }}

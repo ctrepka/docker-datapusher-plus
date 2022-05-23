@@ -18,8 +18,22 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
-        - name: TEST
-          value: "TEST ENVIRONMENT VARIABLE"
+        - name: DB_HOST
+          value: {{ .Values.DBHost }}
+        # Master DB creds
+        - name: POSTGRES_USER
+          value: {{ .Values.datapusher.masterDBUser }}
+        - name: POSTGRES_PASSWORD
+          value: {{ .Values.datapusher.masterDBPassword }}
+        - name: POSTGRES_DB
+          value: {{ .Values.datapusher.masterDBName }}
+        # Datapusher jobs DB creds
+        - name: DATAPUSHER_JOBS_DB_USER
+          value: {{ .Values.datapusher.datapusherJobsDBUser }}
+        - name: DATAPUSHER_JOBS_DB_PASSWORD
+          value: {{ .Values.datapusher.datapusherJobsDBPassword }}
+        - name: DATAPUSHER_JOBS_DB_NAME
+          value: {{ .Values.datapusher.datapusherJobsDBName }}
         command: ["/usr/lib/ckan/datapusher-plus/bin/python"]
         args: ["/srv/datapusher-init/datapusher-init.py"]
         volumeMounts:

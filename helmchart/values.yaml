@@ -1,6 +1,27 @@
 # Default values for datapusher.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+# DBHost -- Variable for name of headless svc from postgres deployment
+
+DBHost: postgres
+
+# DatapusherJobsDBName -- Variable for name of the jobs user database in PostgreSQL
+DatapusherJobsDBName: &DatapusherJobsDBName jobs
+# DatapusherJobsDBUser -- Variable for jobs user name for PostgreSQL
+DatapusherJobsDBUser: &DatapusherJobsDBUser jobs
+# DatapusherJobsDBPass -- Variable for password for the jobs user in PostgreSQL
+DatapusherJobsDBPass: &DatapusherJobsDBPass pass
+
+# DatastoreDBName -- Variable for name of the database used by Datastore
+DatastoreDBName: &DatastoreDBName datastore_default
+# DatastoreRWDBUser -- Variable for username for the user with write access to the datastore database
+DatastoreRWDBUser: &DatastoreRWDBUser datastorerw
+# DatastoreRWDBPass -- Variable for password for the datastore database user with write access
+DatastoreRWDBPass: &DatastoreRWDBPass pass
+# DatastoreRODBUser -- Variable for username for the user with read access to the datastore database
+DatastoreRODBUser: &DatastoreRODBUser datastorero
+# DatastoreRODBPass -- Variable for password for the datastore database user with read access
+DatastoreRODBPass: &DatastoreRODBPass pass
 
 replicaCount: 1
 
@@ -35,17 +56,28 @@ datapusher:
     deduplicate: "1"
     bin: "/usr/local/bin/qsvdp"
   # master db info used to connect to and create databases
-  masterDBUser: "postgres"
-  masterDBPassword: "postgres"
-  masterDBName: "postgres"
-  # jobs db info used to create jobs db
-  jobsDBUser: "jobsUserHere"
-  jobsDBPassword: "jobsPasswordHere"
-  jobsDBName: "jobsDbNameHere"
-  # datastore db info used to create datastore db
-  datastoreDBUser: "datastoreUserHere"
-  datastoreDBPassword: "datastorePasswordHere"
-  datastpreDBName: "datastoreDbNameHere"
+  # datapusher.datapusher.masterDBUser -- Postgres master db user
+  masterDBUser: postgres1
+  # datapusher.datapusher.masterDBPassword -- Postgres master db password
+  masterDBPassword: pass1
+  # datapusher.datapusher.masterDBName -- Postgres master db name
+  masterDBName: postgres1
+  # datapusher.datapusher.datastoreDBName -- Postgres master db user
+  datastoreDBName: datastore_default
+  # datapusher.datapusher.datastoreRWDBUser -- Postgres master db user
+  datastoreRWDBUser: datastorerw
+  # datapusher.datapusher.datastoreRWDBPassword -- Postgres master db password
+  datastoreRWDBPassword: pass
+  # datapusher.datapusher.datastoreRODBUser -- Postgres master db user
+  datastoreRODBUser: datastorero
+  # datapusher.datapusher.datastoreRODBPassword -- Postgres master db password
+  datastoreRODBPassword: pass
+  # datapusher.datapusher.datapusherJobsDBUser -- Postgres master db user
+  datapusherJobsDBUser: *DatapusherJobsDBUser
+  # datapusher.datapusher.datapusherJobsDBPassword -- Postgres master db password
+  datapusherJobsDBPassword: *DatapusherJobsDBPass
+  # datapusher.datapusher.datapusherJobsDBName -- Postgres master db name
+  datapusherJobsDBName: *DatapusherJobsDBName
   # location for datastore logfile
   logFile: "/tmp/ckan_service.log"
   # stdErr enabled or not (0 for False or 1 for True)
