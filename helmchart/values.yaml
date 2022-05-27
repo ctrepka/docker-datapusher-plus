@@ -3,7 +3,14 @@
 # Declare variables to be passed into your templates.
 # DBHost -- Variable for name of headless svc from postgres deployment
 
-DBHost: postgres
+# DBHost -- Variable for name of headless svc from postgres deployment
+DBHost: &DBHost postgres
+# MasterDBName -- Variable for name of the master user database in PostgreSQL
+MasterDBName: &MasterDBName postgres
+# MasterDBUser -- Variable for master user name for PostgreSQL
+MasterDBUser: &MasterDBUser postgres
+# MasterDBPass -- Variable for password for the master user in PostgreSQL
+MasterDBPass: &MasterDBPass pass
 
 # DatapusherJobsDBName -- Variable for name of the jobs user database in PostgreSQL
 DatapusherJobsDBName: &DatapusherJobsDBName jobs
@@ -28,7 +35,7 @@ replicaCount: 1
 image:
   repository: tnristwdb/datapusher-plus
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 imagePullSecrets: []
 nameOverride: ""
@@ -57,21 +64,21 @@ datapusher:
     bin: "/usr/local/bin/qsvdp"
   # master db info used to connect to and create databases
   # datapusher.datapusher.masterDBUser -- Postgres master db user
-  masterDBUser: postgres1
+  masterDBUser: *MasterDBUser
   # datapusher.datapusher.masterDBPassword -- Postgres master db password
-  masterDBPassword: pass1
+  masterDBPassword: *MasterDBPass
   # datapusher.datapusher.masterDBName -- Postgres master db name
-  masterDBName: postgres1
+  masterDBName: *MasterDBName
   # datapusher.datapusher.datastoreDBName -- Postgres master db user
-  datastoreDBName: datastore_default
+  datastoreDBName: *DatastoreDBName
   # datapusher.datapusher.datastoreRWDBUser -- Postgres master db user
-  datastoreRWDBUser: datastorerw
+  datastoreRWDBUser: *DatastoreRWDBUser
   # datapusher.datapusher.datastoreRWDBPassword -- Postgres master db password
-  datastoreRWDBPassword: pass
+  datastoreRWDBPassword: *DatastoreRWDBPass
   # datapusher.datapusher.datastoreRODBUser -- Postgres master db user
-  datastoreRODBUser: datastorero
+  datastoreRODBUser: *DatastoreRODBUser
   # datapusher.datapusher.datastoreRODBPassword -- Postgres master db password
-  datastoreRODBPassword: pass
+  datastoreRODBPassword: *DatastoreRODBPass
   # datapusher.datapusher.datapusherJobsDBUser -- Postgres master db user
   datapusherJobsDBUser: *DatapusherJobsDBUser
   # datapusher.datapusher.datapusherJobsDBPassword -- Postgres master db password

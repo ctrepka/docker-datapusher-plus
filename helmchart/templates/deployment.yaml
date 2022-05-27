@@ -43,6 +43,8 @@ spec:
               value: {{ .Values.datapusher.masterDBName }}
             - name: DATAPUSHER_SQLALCHEMY_DATABASE_URI
               value: "postgresql://{{ .Values.datapusher.datapusherJobsDBUser }}:{{ .Values.datapusher.datapusherJobsDBPassword }}@{{ .Values.DBHost }}/{{ .Values.datapusher.datapusherJobsDBName }}"
+            - name: DATAPUSHER_WRITE_ENGINE_URL
+              value: "postgresql://{{ .Values.datapusher.datastoreRWDBUser }}:{{ .Values.datapusher.datastoreRWDBPassword }}@{{ .Values.DBHost }}/{{ .Values.datapusher.datastoreDBName }}"
             # location of QSV BINARY
             - name: DATAPUSHER_QSV_BIN
               value: {{ .Values.datapusher.qsv.bin }}
@@ -76,8 +78,6 @@ spec:
               value: {{ .Values.datapusher.defaultExcelSheet | quote }}
             - name: DATAPUSHER_AUTO_ALIAS
               value: {{ .Values.datapusher.autoAlias | quote }}
-            - name: DATAPUSHER_WRITE_ENGINE_URL
-              value: {{ .Values.datapusher.writeEngineUrl }}
             # old values
             - name: DATAPUSHER_MAX_CONTENT_LENGTH
               value: {{ .Values.datapusher.maxContentLength | quote }}
