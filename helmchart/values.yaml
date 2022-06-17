@@ -41,6 +41,9 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+awsDeployment:
+  enabled: false
+
 datapusher:
   # enable datapusher or not
   enabled: "True"
@@ -97,6 +100,8 @@ datapusher:
   autoAlias: "1"
   # datapusher write engine url
   writeEngineUrl: ""
+  # extra environment variables to add to the container
+  extraEnv: []
 serviceAccount:
   # Specifies whether a service account should be created
   create: false

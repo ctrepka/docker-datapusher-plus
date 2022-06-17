@@ -34,6 +34,10 @@ spec:
           value: {{ .Values.datapusher.datapusherJobsDBPassword }}
         - name: DATAPUSHER_JOBS_DB_NAME
           value: {{ .Values.datapusher.datapusherJobsDBName }}
+#injected extraenv vars. will override previously defined variables if same env var name
+{{- if .Values.datapusher.extraEnv }}
+{{ toYaml .Values.datapusher.extraEnv | indent 8 }}
+{{- end }}
         command: ["/usr/lib/ckan/datapusher-plus/bin/python"]
         args: ["/srv/datapusher-init/datapusher-init.py"]
         volumeMounts:

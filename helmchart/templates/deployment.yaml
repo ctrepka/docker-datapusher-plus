@@ -18,9 +18,21 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "datapusher.serviceAccountName" . }}
+      #serviceAccountName set to service account name found in cdk ascp_secretsmanager_serviceaccount.yaml
+      {{ if .Values.awsDeployment.enabled }}
+      serviceAccountName: secret-manager-service-account #{{ include "ckan-chart.serviceAccountName" . }} <-- original value replaced as keitaro chart wants to create own service account, if enabled (not enabled by default)
+      {{ end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{ if .Values.awsDeployment.enabled }}
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "aws-secrets" #this is the name of the secretProviderClass created in the cdk with file ascp_secretsstoreconfig.yaml
+      {{ end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -41,6 +53,7 @@ spec:
               value: {{ .Values.datapusher.masterDBPassword }}
             - name: POSTGRES_DB
               value: {{ .Values.datapusher.masterDBName }}
+            # SqlAlchemy Connection Strings
             - name: DATAPUSHER_SQLALCHEMY_DATABASE_URI
               value: "postgresql://{{ .Values.datapusher.datapusherJobsDBUser }}:{{ .Values.datapusher.datapusherJobsDBPassword }}@{{ .Values.DBHost }}/{{ .Values.datapusher.datapusherJobsDBName }}"
             - name: DATAPUSHER_WRITE_ENGINE_URL
@@ -93,6 +106,10 @@ spec:
               value: {{ .Values.datapusher.datapusherRewriteResources | quote }}
             - name: DATAPUSHER_REWRITE_URL
               value: {{ .Values.datapusher.datapusherRewriteUrl | quote }}
+#injected extraenv vars. will override previously defined variables if same env var name
+{{- if .Values.datapusher.extraEnv }}
+{{ toYaml .Values.datapusher.extraEnv | indent 12 }}
+{{- end }}
           livenessProbe:
             httpGet:
               path: /
@@ -101,6 +118,12 @@ spec:
             httpGet:
               path: /
               port: http
+          {{ if .Values.awsDeployment.enabled }}
+          volumeMounts:
+          - name: secrets-store-inline #pv mount for secrets store
+            mountPath: "/mnt/secrets-store"
+            readOnly: true
+          {{ end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

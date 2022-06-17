@@ -29,6 +29,7 @@ os.system("echo db: {} user: {} passwd: {}".format(
     dpp_jobs_passwd
 ))
 
+
 class DB_Params:
     def __init__(self, conn_str):
         self.db_user = conn_str.url.username
@@ -70,6 +71,7 @@ def check_db_connection(db_params, retry=None):
 
 def create_user(db_params):
     con = None
+
     try:
         con = psycopg2.connect(user=master_user,
                                host=db_params.db_host,
@@ -82,7 +84,28 @@ def create_user(db_params):
             AsIs(db_params.db_user.split("@")[0]),
             db_params.db_passwd,
         ))
+    except(Exception, psycopg2.DatabaseError) as error:
+        print("ERROR DB: ", error)
+    finally:
+        cur.close()
+        con.close()
 
+    try:
+        con = psycopg2.connect(user=master_user,
+                               host=db_params.db_host,
+                               password=master_passwd,
+                               database=master_database)
+        con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cur = con.cursor()
+        print("Changing password of user {}".format(
+            db_params.db_user.split("@")[0]))
+        # If password pulled from aws secrets, it may have changed.
+        # This operation may duplicate a portion of the above command, but ensured the RDS credentials for the role
+        # Are synchronized with the secrets in aws secrets manager
+        cur.execute("ALTER ROLE {} PASSWORD '{}'".format(
+            AsIs(db_params.db_user.split("@")[0]),
+            db_params.db_passwd,
+        ))
     except(Exception, psycopg2.DatabaseError) as error:
         print("ERROR DB: ", error)
     finally:
