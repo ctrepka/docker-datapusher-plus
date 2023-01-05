@@ -1,7 +1,7 @@
 #############################
 ### Build DataPusher Plus ###
 #############################
-FROM ubuntu:focal-20210827
+FROM ubuntu:jammy
 
 LABEL maintainer="Texas Natural Resources Information Systems <tnris.twdb@gmail.com>"
 LABEL org.opencontainers.image.source https://github.com/ctrepka/docker-datapusher-plus
@@ -19,7 +19,6 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 ENV LC_ALL=en_US.UTF-8
 
 ENV SRC_DIR=/srv/app/src
-ENV PIP_SRC=${SRC_DIR}
 ENV VENV=/usr/lib/ckan/datapusher-plus
 ENV DATAPUSHER_CFG_DIR=/etc/ckan/datapusher
 
@@ -45,7 +44,8 @@ RUN apt-get install --no-install-recommends -y \
     wget \
     curl \
     unzip \
-    python3-pip
+    python3-pip \
+    git
 
 
 RUN wget https://github.com/jqnatividad/qsv/releases/download/0.46.1/qsv-0.46.1-x86_64-unknown-linux-gnu.zip
@@ -54,11 +54,19 @@ RUN mv qsvdp /usr/local/bin && ls -la
 RUN ln -s /usr/bin/python3 /usr/bin/python
 
 RUN python -m venv ${VENV}
-RUN ${VENV}/bin/pip install datapusher-plus uwsgi
+#RUN ${VENV}/bin/pip install datapusher-plus uwsgi #
+RUN ${VENV}/bin/pip install uwsgi
+## CLONING HOTFIX BRANCH FROM TWDBBEN
+RUN git clone --single-branch --branch hotfix https://github.com/twdbben/datapusher-plus.git
+RUN cd ${SRC_DIR}/datapusher-plus && \
+    ${VENV}/bin/pip install -r requirements-dev.txt && \
+    ${VENV}/bin/pip install -e .
+
 
 RUN mkdir -p ${DATAPUSHER_CFG_DIR}
-RUN curl https://raw.githubusercontent.com/dathere/datapusher-plus/master/datapusher/settings.py -o ${DATAPUSHER_CFG_DIR}/settings.py
-RUN curl https://raw.githubusercontent.com/dathere/datapusher-plus/master/deployment/datapusher-uwsgi.ini -o ${DATAPUSHER_CFG_DIR}/uwsgi.ini
+# USING CONFIG FILES FROM TWDBEN HOTFIX FORK/BRANCH
+RUN curl https://raw.githubusercontent.com/twdbben/datapusher-plus/hotfix/datapusher/settings.py -o ${DATAPUSHER_CFG_DIR}/settings.py
+RUN curl https://raw.githubusercontent.com/twdbben/datapusher-plus/hotfix/deployment/datapusher-uwsgi.ini -o ${DATAPUSHER_CFG_DIR}/uwsgi.ini
 
 ENV JOB_CONFIG=${DATAPUSHER_CFG_DIR}/settings.py
 
