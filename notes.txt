@@ -1,0 +1,7 @@
+# ENV VARIABLES
+use .env file for environment variables
+or touch config file directly
+
+- Use git installation over pip
+# OS ENV VARIABLES DO WORK
+# config.py as reference for variables
