@@ -10,8 +10,9 @@ services:
         condition: service_healthy
     container_name: datapusher-plus
     build:
-      dockerfile: ./0_7_0/Dockerfile
-    image: datapusher-plus:latest
+      context: ./1-datapusher-plus/0.7.0/
+      dockerfile: Dockerfile
+    image: 746466009731.dkr.ecr.us-east-1.amazonaws.com/datapusher-plus:0.7.0
     networks:
       - frontend
       - backend
@@ -24,8 +25,8 @@ services:
   db:
     container_name: db-datapusher-plus
     build:
-      context: .
-      dockerfile: postgresql/Dockerfile
+      context: ./2-postgresql/
+      dockerfile: Dockerfile
       args:
         - DS_RO_PASS=${DATASTORE_READONLY_PASSWORD}
         - POSTGRES_PASSWORD=the_password

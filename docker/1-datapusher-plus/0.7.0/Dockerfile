@@ -58,10 +58,10 @@ RUN cd ${SRC_DIR}/datapusher-plus && \
 
 #SETUP CONFIG/SETTINGS.PY
 RUN mkdir -p ${CFG_DIR}
-COPY datapusher-settings.py ${CFG_DIR}/settings.py
+COPY ./datapusher-settings.py ${CFG_DIR}/settings.py
 ENV JOB_CONFIG=${CFG_DIR}/settings.py
 
-RUN curl https://raw.githubusercontent.com/ctrepka/datapusher-plus/master/deployment/datapusher-uwsgi.ini -o ${CFG_DIR}/uwsgi.ini
+RUN curl https://raw.githubusercontent.com/dathere/datapusher-plus/0.7.0/deployment/datapusher-uwsgi.ini -o ${CFG_DIR}/uwsgi.ini
 
 
 COPY ./entrypoint/startup.sh /startup.sh
@@ -72,6 +72,5 @@ RUN ls -la ${CFG_DIR} && ls -la ${SRC_DIR}/datapusher-plus
 USER www-data
 
 ENTRYPOINT ["/bin/sh", "/startup.sh"]
-#ENTRYPOINT ${VENV}/bin/uwsgi --enable-threads -i ${CFG_DIR}/uwsgi.ini
 
 EXPOSE 8800
