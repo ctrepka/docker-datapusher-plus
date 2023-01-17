@@ -1,5 +1,11 @@
 import subprocess
 
+docker_tag = input("is there a specific tag you would like to use for this build? (press Enter to use the default, 'latest')\n")
+
+if docker_tag == "":
+    docker_tag = "latest"
+
+
 def run(cmd):
     to_decode = subprocess.Popen(
         cmd, shell=True, stdout=subprocess.PIPE).stdout
@@ -18,11 +24,16 @@ LOGIN_STDOUT = run("aws ecr get-login-password --region {R} | docker login \
                    )
 print(LOGIN_STDOUT)
 
+BUILD_IMAGE_STDOUT = run (
+    "docker build ./ -t datapusher-plus:{TAG}".format(TAG=docker_tag)
+)
+print(BUILD_IMAGE_STDOUT)
+
 TAG_IMAGE_STDOUT = run(
-    "docker tag datapusher-plus:latest {ECR_URI}/datapusher-plus".format(ECR_URI=ECR_URI))
+    "docker tag datapusher-plus:{TAG} {ECR_URI}/datapusher-plus:{TAG}".format(ECR_URI=ECR_URI, TAG=docker_tag))
 print(TAG_IMAGE_STDOUT)
 
 print("\n Pushing Image, please wait... \n")
 PUSH_IMAGE_STDOUT = run(
-    "docker push {ECR_URI}/datapusher-plus:latest".format(ECR_URI=ECR_URI))
+    "docker push {ECR_URI}/datapusher-plus:{TAG}".format(ECR_URI=ECR_URI, TAG=docker_tag))
 print(PUSH_IMAGE_STDOUT)
