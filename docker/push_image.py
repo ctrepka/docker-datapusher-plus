@@ -25,7 +25,7 @@ LOGIN_STDOUT = run("aws ecr get-login-password --region {R} | docker login \
 print(LOGIN_STDOUT)
 
 BUILD_IMAGE_STDOUT = run (
-    "docker build ./ -t datapusher-plus:{TAG}".format(TAG=docker_tag)
+    "docker build ./1-datapusher-plus/{TAG} -t datapusher-plus:{TAG}".format(TAG=docker_tag)
 )
 print(BUILD_IMAGE_STDOUT)
 
