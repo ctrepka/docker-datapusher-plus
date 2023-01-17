@@ -54,57 +54,57 @@ spec:
             - name: POSTGRES_DB
               value: {{ .Values.datapusher.masterDBName }}
             # SqlAlchemy Connection Strings
-            - name: DATAPUSHER_SQLALCHEMY_DATABASE_URI
+            - name: SQLALCHEMY_DATABASE_URI
               value: "postgresql://{{ .Values.datapusher.datapusherJobsDBUser }}:{{ .Values.datapusher.datapusherJobsDBPassword }}@{{ .Values.DBHost }}/{{ .Values.datapusher.datapusherJobsDBName }}"
-            - name: DATAPUSHER_WRITE_ENGINE_URL
+            - name: WRITE_ENGINE_URL
               value: "postgresql://{{ .Values.datapusher.datastoreRWDBUser }}:{{ .Values.datapusher.datastoreRWDBPassword }}@{{ .Values.DBHost }}/{{ .Values.datapusher.datastoreDBName }}"
             # location of QSV BINARY
-            - name: DATAPUSHER_QSV_BIN
+            - name: QSV_BIN
               value: {{ .Values.datapusher.qsv.bin }}
             # should datapusher remove duplicate records in a resource?
-            - name: DATAPUSHER_QSV_DEDUP
+            - name: QSV_DEDUP
               value: {{ .Values.datapusher.qsv.deduplicate | quote }}
             # vars to use to create / connect to Jobs DB
-            - name: DATAPUSHER_JOBS_DB_USER
+            - name: JOBS_DB_USER
               value: {{ .Values.datapusher.datapusherJobsDBUser }}
-            - name: DATAPUSHER_JOBS_DB_PASSWORD
+            - name: JOBS_DB_PASSWORD
               value: {{ .Values.datapusher.datapusherJobsDBPassword }}
-            - name: DATAPUSHER_JOBS_DB_NAME
+            - name: JOBS_DB_NAME
               value: {{ .Values.datapusher.datapusherJobsDBName }}
             # vars to use to create / connect to Datastore RW DB
-            - name: DATAPUSHER_DATASTORE_DB_USER
+            - name: DATASTORE_DB_USER
               value: {{ .Values.datapusher.datastoreRWDBUser }}
-            - name: DATAPUSHER_DATASTORE_DB_PASSWORD
+            - name: DATASTORE_DB_PASSWORD
               value: {{ .Values.datapusher.datastoreRWDBPassword }}
-            - name: DATAPUSHER_DATASTORE_DB_NAME
+            - name: DATASTORE_DB_NAME
               value: {{ .Values.datapusher.datastoreDBName }}
             # location of Datapusher logFile
-            - name: DATAPUSHER_LOG_FILE
+            - name: LOG_FILE
               value: {{ .Values.datapusher.logFile }}
             # whether Datapusher should log to stdErr
-            - name: DATAPUSHER_STDERR
+            - name: STDERR
               value: {{ .Values.datapusher.stdErr | quote }}
             # number of preview rows to display via datapusher
-            - name: DATAPUSHER_PREVIEW_ROWS
+            - name: PREVIEW_ROWS
               value: {{ .Values.datapusher.previewRows | quote }}
-            - name: DATAPUSHER_DEFAULT_EXCEL_SHEET
+            - name: DEFAULT_EXCEL_SHEET
               value: {{ .Values.datapusher.defaultExcelSheet | quote }}
-            - name: DATAPUSHER_AUTO_ALIAS
+            - name: AUTO_ALIAS
               value: {{ .Values.datapusher.autoAlias | quote }}
             # old values
-            - name: DATAPUSHER_MAX_CONTENT_LENGTH
+            - name: MAX_CONTENT_LENGTH
               value: {{ .Values.datapusher.maxContentLength | quote }}
-            - name: DATAPUSHER_CHUNK_SIZE
+            - name: CHUNK_SIZE
               value: {{ .Values.datapusher.chunkSize | quote }}
-            - name: DATAPUSHER_CHUNK_INSERT_ROWS
+            - name: CHUNK_INSERT_ROWS
               value: {{ .Values.datapusher.insertRows | quote }}
-            - name: DATAPUSHER_DOWNLOAD_TIMEOUT
+            - name: DOWNLOAD_TIMEOUT
               value: {{ .Values.datapusher.downloadTimeout | quote }}
-            - name: DATAPUSHER_SSL_VERIFY
+            - name: SSL_VERIFY
               value: {{ .Values.datapusher.datapusherSslVerify | quote }}
-            - name: DATAPUSHER_REWRITE_RESOURCES
+            - name: REWRITE_RESOURCES
               value: {{ .Values.datapusher.datapusherRewriteResources | quote }}
-            - name: DATAPUSHER_REWRITE_URL
+            - name: REWRITE_URL
               value: {{ .Values.datapusher.datapusherRewriteUrl | quote }}
 #injected extraenv vars. will override previously defined variables if same env var name
 {{- if .Values.datapusher.extraEnv }}

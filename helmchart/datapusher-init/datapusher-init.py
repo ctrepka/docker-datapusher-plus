@@ -19,9 +19,9 @@ master_user = os.environ.get("POSTGRES_USER", "postgres")
 master_passwd = os.environ.get("POSTGRES_PASSWORD")
 master_database = os.environ.get("POSTGRES_DB", master_user)
 # creds for datapusher-plus jobs db
-dpp_jobs_user = os.environ.get("DATAPUSHER_JOBS_DB_USER", "jobs")
-dpp_jobs_passwd = os.environ.get("DATAPUSHER_JOBS_DB_PASSWORD", "jobsPasswd")
-dpp_jobs_database = os.environ.get("DATAPUSHER_JOBS_DB_NAME", "jobs")
+dpp_jobs_user = os.environ.get("JOBS_DB_USER", "jobs")
+dpp_jobs_passwd = os.environ.get("JOBS_DB_PASSWORD", "jobsPasswd")
+dpp_jobs_database = os.environ.get("JOBS_DB_NAME", "jobs")
 
 os.system("echo db: {} user: {} passwd: {}".format(
     dpp_jobs_database,
