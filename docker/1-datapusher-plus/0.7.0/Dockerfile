@@ -42,12 +42,14 @@ RUN apt-get install --no-install-recommends -y \
     python3-pip \
     git
 
+#install qsv;
+RUN wget https://github.com/jqnatividad/qsv/releases/download/0.84.0/qsv-0.84.0-x86_64-unknown-linux-gnu.zip
+RUN unzip qsv-0.84.0-x86_64-unknown-linux-gnu.zip
+RUN rm qsv-0.84.0-x86_64-unknown-linux-gnu.zip
+RUN mv qsv* /usr/local/bin
 
-RUN wget https://github.com/jqnatividad/qsv/releases/download/0.46.1/qsv-0.46.1-x86_64-unknown-linux-gnu.zip
-RUN unzip qsv-0.46.1-x86_64-unknown-linux-gnu.zip
-RUN mv qsvdp /usr/local/bin && ls -la
+#python env setup; link python3 to python cmd; make venv; install uwsgi;
 RUN ln -s /usr/bin/python3 /usr/bin/python
-
 RUN python -m venv ${VENV}
 RUN ${VENV}/bin/pip install uwsgi
 #INSTALL DATAPUSHER-PLUS FROM SOURCE REPO

@@ -7,6 +7,12 @@ def run(cmd):
 
     return output.decode()
 
+#################################################################################################################################
+
+docker_tag = input("is there a specific tag you would like to use for this build? (press Enter to use the default, 'latest')\n")
+
+if docker_tag == "":
+    docker_tag = "latest"
 
 AWS_ACCOUNT = run(
     "aws sts get-caller-identity --query \"Account\" --output text").strip()
@@ -20,5 +26,5 @@ print(LOGIN_STDOUT)
 
 print("\n Pushing Image, please wait... \n")
 PUSH_IMAGE_STDOUT = run(
-    "helm push ./chart-package/datapusher-plus-helmchart-0.1.0.tgz oci://{}".format(ECR_URI))
+    "helm push ./chart-package/datapusher-plus-helmchart-{}.tgz oci://{}".format(docker_tag, ECR_URI))
 print(PUSH_IMAGE_STDOUT)
