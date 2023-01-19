@@ -14,6 +14,10 @@ docker_tag = input("is there a specific tag you would like to use for this build
 if docker_tag == "":
     docker_tag = "latest"
 
+print("Packaging Helmchart version {}".format(docker_tag))
+HELM_PACKAGE_STDOUT = run("helm package . -d ./chart-package/")
+print(HELM_PACKAGE_STDOUT)
+
 AWS_ACCOUNT = run(
     "aws sts get-caller-identity --query \"Account\" --output text").strip()
 AWS_REGION = run("aws configure get region").strip()
