@@ -47,6 +47,7 @@ awsDeployment:
 datapusher:
   # enable datapusher or not
   enabled: "True"
+  initDb: "False"
   # datapusher.maxContentLength -- Maximum size of content to be uploaded in bytes.
   maxContentLength: "10485760"
   # datapusher.chunkSize -- Size of chunks of the data that is being downloaded in bytes
