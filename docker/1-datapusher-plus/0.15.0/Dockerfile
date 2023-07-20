@@ -74,8 +74,8 @@ RUN cd ${SRC_DIR}/datapusher-plus && \
 
 #SETUP CONFIG/SETTINGS.PY
 RUN mkdir -p ${CFG_DIR}
-COPY ./example.env ${CFG_DIR}/.env
-ENV JOB_CONFIG=${CFG_DIR}/.env
+COPY ./datapusher-settings.py ${CFG_DIR}/settings.py
+ENV JOB_CONFIG=${CFG_DIR}/settings.py
 
 
 RUN curl https://raw.githubusercontent.com/dathere/datapusher-plus/0.15.0/deployment/datapusher-uwsgi.ini -o ${CFG_DIR}/uwsgi.ini

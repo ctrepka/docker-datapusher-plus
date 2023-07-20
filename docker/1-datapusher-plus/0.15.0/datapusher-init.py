@@ -8,11 +8,6 @@ from sqlalchemy import create_engine
 
 # db host
 db_host = os.environ.get("DB_HOST", "")
-# Designed/intended for use with mdillon:11 postgis image.
-# See https://hub.docker.com/r/mdillon/postgis/
-# for notes on default environment variable settings,
-# which are taken into account below.
-# the configuration should, however, work for most postgres images.
 master_user = os.environ.get("POSTGRES_USER", "postgres")
 master_passwd = os.environ.get("POSTGRES_PASSWORD")
 master_database = os.environ.get("POSTGRES_DB", master_user)

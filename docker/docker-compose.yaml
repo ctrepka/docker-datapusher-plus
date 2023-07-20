@@ -10,9 +10,9 @@ services:
         condition: service_healthy
     container_name: datapusher-plus
     build:
-      context: ./1-datapusher-plus/0.7.0/
+      context: ./1-datapusher-plus/0.15.0/
       dockerfile: Dockerfile
-    image: 746466009731.dkr.ecr.us-east-1.amazonaws.com/datapusher-plus:0.7.0
+    image: datapusher-plus:0.15.0
     networks:
       - frontend
       - backend
@@ -20,8 +20,6 @@ services:
       - "8800:8800"
     env_file:
       - ./.env
-    environment:
-      - SQLALCHEMY_DATABASE_URI=postgresql://${JOBS_DB_USER}:${JOBS_DB_PASSWORD}@db/${JOBS_DB_NAME}
   db:
     container_name: db-datapusher-plus
     build:
@@ -34,19 +32,15 @@ services:
       - "5432:5432"
     env_file:
       - ./.env
+    volumes:
+      - ./2-postgresql/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
     networks:
       - backend
-    environment:
-      - PGDATA=/var/lib/postgresql/data/db
-      - SQLALCHEMY_DATABASE_URI=postgresql://${JOBS_DB_USER}:${JOBS_DB_PASSWORD}@db/${JOBS_DB_NAME}
-    volumes:
-      - pg_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "jobs"]
       interval: 10s
       timeout: 10s
       retries: 5
-
 networks:
   frontend:
   backend:

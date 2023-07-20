@@ -1,13 +1,11 @@
-FROM mdillon/postgis:11
+FROM postgis/postgis:12-3.3-alpine
 
-# Allow connections; we don't map out any ports so only linked docker containers can connect
-RUN echo "host all  all    0.0.0.0/0  md5" >> /var/lib/postgresql/data/pg_hba.conf
-    
+# Allow connections; we don't map out any ports so only linked docker containers can connect    
 # Customize default user/pass/db
 ENV POSTGRES_DB ckan
 ENV POSTGRES_USER ckan
 ARG POSTGRES_PASSWORD
 ARG DS_RO_PASS
 
+
 EXPOSE 5432
-# Include datastore setup scripts
